@@ -1,0 +1,92 @@
+/* Box Model Hack */
+* {
+     box-sizing: border-box;
+}
+
+/* Clear fix hack */
+.clearfix:after {
+     content: ".";
+     display: block;
+     clear: both;
+     visibility: hidden;
+     line-height: 0;
+     height: 0;
+}
+
+.clear {
+     clear: both;
+}
+
+/******************************************
+/* BASE STYLES
+/*******************************************/
+
+header {
+     height: 50px;
+     background-color: lightpink;
+}
+
+header img {
+     float: left;
+     padding-left: 50px;
+}
+
+header nav {
+     float: right;
+     padding-right: 50px;
+}
+
+header li {
+     display: inline;
+}
+
+main {
+     background-color: lightpink;
+     padding: 100px 100px 0 100px;
+     height: 550px;
+}
+
+main h1 {
+     color: white;
+}
+
+button {
+     padding: 10px;
+     margin: 10px 0;
+     display: block;
+     background-color: black;
+     color: white;
+}
+
+main .firstd {
+     float: left;
+     height: 200px;
+     width: 200px;
+     background-color: black;
+}
+
+.mainlower {
+     background-color: white;
+}
+
+.mainlower div {
+     width: 33.333%;
+     float: left;
+     padding: 100px 0;
+}
+
+.momentum {
+     background-color: lightgray;
+     height: 250px;
+     padding: 0 150px;
+}
+
+@media (max-width:767px) {
+     body header nav {
+          display: none;
+     }
+
+     .mainlower div {
+          width: 100%; 
+     }
+}

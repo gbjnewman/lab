@@ -1,0 +1,143 @@
+/* Box Model Hack */
+* {
+     box-sizing: border-box;
+}
+
+/* Clear fix hack */
+.clearfix:after {
+     content: ".";
+     display: block;
+     clear: both;
+     visibility: hidden;
+     line-height: 0;
+     height: 0;
+}
+
+.clear {
+	clear: both;
+}
+
+/******************************************
+/* BASE STYLES
+/*******************************************/
+/* 
+body {
+
+}
+ */
+
+/******************************************
+/* LAYOUT
+/*******************************************/
+header * {
+     background: #66768a;
+}
+header > section {
+     border: 1px solid black;
+     height: 70px;
+     float: left;
+     width: 33.333%;
+}
+
+header > section > ul > li {
+     float: left;
+}
+
+.logo {
+     text-align: center;
+}
+.donate  {
+     text-align: right;
+}
+.sect0 {
+     clear: both;
+     background-color: #66768a;
+     height: 450px;
+     color: white;
+     text-align: center;
+     border: 1px solid black;
+}
+
+.sect0 h1 {
+     margin-top: 80px;
+     font-size: 50px;
+}
+
+.sect0 > p {
+     margin: 50px auto;
+     width: 80%;
+     font-size: 25px;
+}
+
+
+.sect1 {
+     background: #fff;
+     color: black;
+     text-align: center;
+     border: black solid 1px;
+     height: 400px;
+}
+.sect1 .sect11 {
+     width: 50%;
+     height: 200px;
+     margin: 100px auto;
+     border: solid black 1px;
+}
+
+.sect2 {
+     height: 650px;
+     background-color: #dbdfe2;
+     border: solid black 1px;
+}
+.sect2 section {
+     width: 50%;
+     border: black solid 1px;
+     float: left;
+     height: 100%;
+     text-align: center;
+}
+
+.sect3 {
+     height: 550px;
+     background-color: #fff;
+     text-align: center;
+     width: 50%;
+     margin: auto;
+}
+footer {
+     background-color: #161f2a;
+     height: 300px;
+
+}
+footer > div {
+     border: lime 1px solid;
+     width: 80%;
+     height:100%;
+     margin:  auto;
+
+}
+.ftl, .ftr {
+     height: 80%;
+     float: left;
+     width: 25%;
+}
+.ftm {
+     height: 80%;
+     float: left;
+     width: 50%;
+}
+
+.fb {
+     clear: both;
+     border-top: black solid 2px;
+
+}
+.fb img {
+     float: right;
+}
+
+
+
+/******************************************
+/* ADDITIONAL STYLES
+/*******************************************/
