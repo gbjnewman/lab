@@ -6,7 +6,7 @@ const instructions = {
   0b100010: 'mov',
 };
 
-const mode = {
+const modes = {
   0b11: 'register mode',
 };
 
@@ -40,7 +40,7 @@ for (let i = 0; i < fileContents.length; i=i+2) {
   let instruction = instructions[firstByte>>2];
   let dSet = 0b1&(firstByte>>1);
   let wSet = 0b1&(firstByte);
-  let mode = secondByte>>6&0b11;
+  let mode = modes[secondByte>>6];
   let reg = wSet ? regWtrue[secondByte>>3&0b111] : regWfalse[secondByte>>3&0b111];
   let regMem = wSet ? regWtrue[secondByte&0b111] : regWfalse[secondByte&0b111];
   let output = dSet ? `${instruction} ${reg}, ${regMem}` : `${instruction} ${regMem}, ${reg}`;
