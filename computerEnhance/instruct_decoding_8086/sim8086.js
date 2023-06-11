@@ -10,7 +10,7 @@ const modes = {
   0b11: 'register mode',
 };
 
-const regWtrue = {
+const regWideTrue = {
   0b000: 'ax',
   0b001: 'cx',
   0b010: 'dx',
@@ -21,7 +21,7 @@ const regWtrue = {
   0b111: 'di',
 }
 
-const regWfalse = {
+const regWideFalse = {
   0b000: 'al',
   0b001: 'cl',
   0b010: 'dl',
@@ -41,8 +41,8 @@ for (let i = 0; i < buffer.length; i=i+2) {
   let dSet = 0b1&(firstByte>>1);
   let wSet = 0b1&(firstByte);
   let mode = modes[secondByte>>6];
-  let reg = wSet ? regWtrue[secondByte>>3&0b111] : regWfalse[secondByte>>3&0b111];
-  let regMem = wSet ? regWtrue[secondByte&0b111] : regWfalse[secondByte&0b111];
+  let reg = wSet ? regWideTrue[secondByte>>3&0b111] : regWideFalse[secondByte>>3&0b111];
+  let regMem = wSet ? regWideTrue[secondByte&0b111] : regWideFalse[secondByte&0b111];
   let output = dSet ? `${instruction} ${reg}, ${regMem}` : `${instruction} ${regMem}, ${reg}`;
 
   console.log(output);
