@@ -1,6 +1,6 @@
 const fs = require('fs');
-//const fileContents = fs.readFileSync('listing_0037_single_register_mov');
-const fileContents = fs.readFileSync('listing_0038_many_register_mov');
+//const buffer = fs.readFileSync('listing_0037_single_register_mov');
+const buffer = fs.readFileSync('listing_0038_many_register_mov');
 
 const instructions = {
   0b100010: 'mov',
@@ -34,9 +34,9 @@ const regWfalse = {
 
 console.log('bits 16\n');
 
-for (let i = 0; i < fileContents.length; i=i+2) {
-  let firstByte = fileContents[i];
-  let secondByte = fileContents[i+1];
+for (let i = 0; i < buffer.length; i=i+2) {
+  let firstByte = buffer[i];
+  let secondByte = buffer[i+1];
   let instruction = instructions[firstByte>>2];
   let dSet = 0b1&(firstByte>>1);
   let wSet = 0b1&(firstByte);
