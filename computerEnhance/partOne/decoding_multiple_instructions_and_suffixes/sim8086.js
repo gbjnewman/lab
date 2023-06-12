@@ -1,9 +1,13 @@
 const fs = require('fs');
 //const buffer = fs.readFileSync('listing_0037_single_register_mov');
-const buffer = fs.readFileSync('listing_0038_many_register_mov');
+const buffer = fs.readFileSync('listing_0039_more_movs');
 
 const instructions = {
-  0b100010: 'mov',
+  0b100010: 'mov',  //register/memory to/from register
+  0b1100011: 'mov', //immediate to register/memory
+  0b1011: 'mov',    //immediate to register
+  0b1010000: 'mov', //memory to accumulator
+  0b1010001: 'mov', //accumulator to memory
 };
 
 const modes = {
@@ -34,10 +38,16 @@ const regWideFalse = {
 
 console.log('bits 16\n');
 
-for (let i = 0; i < buffer.length; i=i+2) {
+let i = 0;
+while (i < buffer.length) {
+  let instruction = '';
   let firstByte = buffer[i];
+  if (firstByte>>4 === 0b1011) {
+    instruction = 'mov';    //mov-immediate to register
+  } else if (firstByte>>2 === 0b100010) {
+    instruction = 'mov';    //mov-register/memory to/from register
+  }
   let secondByte = buffer[i+1];
-  let instruction = instructions[firstByte>>2];
   let dSet = 0b1&(firstByte>>1);
   let wSet = 0b1&(firstByte);
   let mode = modes[secondByte>>6];
@@ -46,4 +56,5 @@ for (let i = 0; i < buffer.length; i=i+2) {
   let output = dSet ? `${instruction} ${reg}, ${regMem}` : `${instruction} ${regMem}, ${reg}`;
 
   console.log(output);
+  i = i + 2
 }
