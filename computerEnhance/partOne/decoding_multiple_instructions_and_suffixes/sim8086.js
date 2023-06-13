@@ -116,16 +116,7 @@ while (i < buffer.length) {
     console.log((dSet===0b1) ? `${instructionOutput} ${regOutput}, ${rmOutput}` : `${instructionOutput} ${rmOutput}, ${regOutput}`);
 
   } /*else if (firstByte>>1===0b1100011) {
-
-    i = i +1;
   } else if (firstByte>>1===0b1010000) {
-
-    i = i +1;
   } else if (firstByte>>1===0b1010000) {
-
-    i = i +1;
-  } else {
-    console.log('else');
-    i = i +1;
   }*/
 }
