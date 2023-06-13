@@ -117,6 +117,6 @@ while (i < buffer.length) {
 
   } /*else if (firstByte>>1===0b1100011) {
   } else if (firstByte>>1===0b1010000) {
-  } else if (firstByte>>1===0b1010000) {
+  } else if (firstByte>>1===0b1010001) {
   }*/
 }
