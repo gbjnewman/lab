@@ -1,5 +1,5 @@
 const fs = require('fs');
-//const buffer = fs.readFileSync('listing_0037_single_register_mov');
+//const buffer = fs.readFileSync('listing_0038_many_register_mov');
 const buffer = fs.readFileSync('listing_0039_more_movs');
 
 const instructions = {
@@ -14,18 +14,7 @@ const modes = {
   0b11: 'register mode',
 };
 
-const regWideTrue = {
-  0b000: 'ax',
-  0b001: 'cx',
-  0b010: 'dx',
-  0b011: 'bx',
-  0b100: 'sp',
-  0b101: 'bp',
-  0b110: 'si',
-  0b111: 'di',
-}
-
-const regWideFalse = {
+const regFieldw0 = {
   0b000: 'al',
   0b001: 'cl',
   0b010: 'dl',
@@ -36,25 +25,116 @@ const regWideFalse = {
   0b111: 'bh',
 }
 
+const regFieldw1 = {
+  0b000: 'ax',
+  0b001: 'cx',
+  0b010: 'dx',
+  0b011: 'bx',
+  0b100: 'sp',
+  0b101: 'bp',
+  0b110: 'si',
+  0b111: 'di',
+}
+
+const rmField = {
+  0b000: 'bx + si',
+  0b001: 'bx + di',
+  0b010: 'bp + si',
+  0b011: 'bp + di',
+  0b100: 'si',
+  0b101: 'di',
+  0b110: 'bp',
+  0b111: 'bx',
+}
+
 console.log('bits 16\n');
 
 let i = 0;
 while (i < buffer.length) {
-  let instruction = '';
   let firstByte = buffer[i];
-  if (firstByte>>4 === 0b1011) {
-    instruction = 'mov';    //mov-immediate to register
-  } else if (firstByte>>2 === 0b100010) {
-    instruction = 'mov';    //mov-register/memory to/from register
-  }
-  let secondByte = buffer[i+1];
-  let dSet = 0b1&(firstByte>>1);
-  let wSet = 0b1&(firstByte);
-  let mode = modes[secondByte>>6];
-  let reg = wSet ? regWideTrue[secondByte>>3&0b111] : regWideFalse[secondByte>>3&0b111];
-  let regMem = wSet ? regWideTrue[secondByte&0b111] : regWideFalse[secondByte&0b111];
-  let output = dSet ? `${instruction} ${reg}, ${regMem}` : `${instruction} ${regMem}, ${reg}`;
 
-  console.log(output);
-  i = i + 2
+  if (firstByte>>4===0b1011) {    //immediate to register move
+    let secondByte = buffer[i+1];
+    let instruction = 0b1111&(firstByte>>4);
+    let instructionOutput = `${instructions[instruction]}`;
+    let reg = 0b111&(firstByte);
+    let wSet = 0b1&(firstByte>>3);
+    let regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
+    let immediateOutput = '';
+
+    if (wSet === 0b0) {   // if 8bit
+    immediateOutput = secondByte;
+      i = i + 2;
+    } else if (wSet === 0b1) {    //if 16bit
+      let thirdByte = buffer[i+2];
+      immediateOutput = (thirdByte<<8)|secondByte
+      i = i + 3;
+    }
+
+    console.log(`${instructionOutput} ${regOutput}, ${immediateOutput}`);
+
+  } else if (firstByte>>2===0b100010) {   //  move register/memory to/from register
+    let instruction = 0b111111&(firstByte>>2);
+    let dSet = 0b1&(firstByte>>1);
+    let wSet = 0b1&(firstByte);
+    let secondByte = buffer[i+1];
+    let mod = 0b11&(secondByte>>6);
+    let reg = 0b111&(secondByte>>3);
+    let regMem = 0b111&(secondByte);
+    let instructionOutput = `${instructions[instruction]}`;
+    let regOutput = '';
+    let rmOutput = '';
+
+    // modes for -  move register/memory to/from register
+    if (mod===0b00 && regMem===0b110) {   // special case for mode 00
+      console.log(' mod is 00 and regmem is 110')
+      i = i + 4
+    } else if (mod===0b00) {    // mode 00 memory mode, no displacement(spec case if rm110
+      regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
+      rmOutput = `[${rmField[regMem]}]`;
+      i = i + 2;
+    } else if (mod===0b01) {    // mode 01 memory mode, 8 bit displacement
+      let thirdByte = buffer[i+2];
+      regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
+      if (thirdByte===0b0) {
+      rmOutput = `[${rmField[regMem]}]`;
+      } else {
+      rmOutput = `[${rmField[regMem]} + ${thirdByte}]`;
+      }
+
+      i = i + 3;
+    } else if (mod===0b10) {    // mode 10 memory mode, 16 bit displacement
+      let thirdByte = buffer[i+2];
+      let fourthByte = buffer[i+3];
+      regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
+      if (thirdByte===0b0 && fourthByte===0b0) {
+      rmOutput = `[${rmField[regMem]}]`;
+      } else {
+      addressLoc = (fourthByte<<8)|thirdByte
+      rmOutput = `[${rmField[regMem]} + ${addressLoc}]`;
+      }
+
+      i = i +4;
+    } else if (mod===0b11) {    // mode 11 register mode, no displacement
+      regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
+      rmOutput = wSet===0b1 ? `${regFieldw1[regMem]}` : `${regFieldw0[regMem]}`;
+
+      i = i + 2
+    }
+
+    console.log((dSet===0b1) ? `${instructionOutput} ${regOutput}, ${rmOutput}` : `${instructionOutput} ${rmOutput}, ${regOutput}`);
+
+  } /*else if (firstByte>>1===0b1100011) {
+
+    i = i +1;
+  } else if (firstByte>>1===0b1010000) {
+
+    i = i +1;
+  } else if (firstByte>>1===0b1010000) {
+
+    i = i +1;
+  } else {
+    console.log('else');
+    i = i +1;
+  }*/
 }
