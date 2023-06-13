@@ -68,18 +68,17 @@ while (i < buffer.length) {
     console.log(`${instructionOutput} ${regOutput}, ${immediateOutput}`);
 
   } else if (firstByte>>2===0b100010) {   //  move register/memory to/from register
-    let instruction = 0b111111&(firstByte>>2);
+    let secondByte = buffer[i+1];
+    let instructionOutput = `${instructions[0b111111&(firstByte>>2)]}`;
     let dSet = 0b1&(firstByte>>1);
     let wSet = 0b1&(firstByte);
-    let secondByte = buffer[i+1];
     let mod = 0b11&(secondByte>>6);
     let reg = 0b111&(secondByte>>3);
     let regMem = 0b111&(secondByte);
-    let instructionOutput = `${instructions[instruction]}`;
     let regOutput = '';
     let rmOutput = '';
 
-    // modes for -  move register/memory to/from register
+    // modes for register/memory to/from register
     if (mod===0b00 && regMem===0b110) {   // special case for mode 00
       console.log(' mod is 00 and regmem is 110')
       i = i + 4
@@ -92,7 +91,7 @@ while (i < buffer.length) {
     } else if (mod===0b01) {    // mode 01 memory mode, 8 bit displacement
       let thirdByte = buffer[i+2];
       regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
-      rmOutput = (thirdByte===0b0) ? rmOutput = `[${rmField[regMem]}]` : rmOutput = `[${rmField[regMem]} + ${thirdByte}]`;
+      rmOutput = (thirdByte===0b0) ? `[${rmField[regMem]}]` : `[${rmField[regMem]} + ${thirdByte}]`;
       i = i + 3;
 
     } else if (mod===0b10) {    // mode 10 memory mode, 16 bit displacement
