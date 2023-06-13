@@ -89,20 +89,18 @@ while (i < buffer.length) {
     if (mod===0b00 && regMem===0b110) {   // special case for mode 00
       console.log(' mod is 00 and regmem is 110')
       i = i + 4
+
     } else if (mod===0b00) {    // mode 00 memory mode, no displacement(spec case if rm110
       regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
       rmOutput = `[${rmField[regMem]}]`;
       i = i + 2;
+
     } else if (mod===0b01) {    // mode 01 memory mode, 8 bit displacement
       let thirdByte = buffer[i+2];
       regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
-      if (thirdByte===0b0) {
-      rmOutput = `[${rmField[regMem]}]`;
-      } else {
-      rmOutput = `[${rmField[regMem]} + ${thirdByte}]`;
-      }
-
+      rmOutput = (thirdByte===0b0) ? rmOutput = `[${rmField[regMem]}]` : rmOutput = `[${rmField[regMem]} + ${thirdByte}]`;
       i = i + 3;
+
     } else if (mod===0b10) {    // mode 10 memory mode, 16 bit displacement
       let thirdByte = buffer[i+2];
       let fourthByte = buffer[i+3];
@@ -113,13 +111,13 @@ while (i < buffer.length) {
       addressLoc = (fourthByte<<8)|thirdByte
       rmOutput = `[${rmField[regMem]} + ${addressLoc}]`;
       }
-
       i = i +4;
+
     } else if (mod===0b11) {    // mode 11 register mode, no displacement
       regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
       rmOutput = wSet===0b1 ? `${regFieldw1[regMem]}` : `${regFieldw0[regMem]}`;
-
       i = i + 2
+
     }
 
     console.log((dSet===0b1) ? `${instructionOutput} ${regOutput}, ${rmOutput}` : `${instructionOutput} ${rmOutput}, ${regOutput}`);
