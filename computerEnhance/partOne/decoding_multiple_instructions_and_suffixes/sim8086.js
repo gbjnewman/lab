@@ -9,10 +9,6 @@ const instructions = {
   0b1010001: 'mov', //accumulator to memory
 };
 
-const modes = {
-  0b11: 'register mode',
-};
-
 const regFieldw0 = {
   0b000: 'al',
   0b001: 'cl',
@@ -54,19 +50,18 @@ while (i < buffer.length) {
 
   if (firstByte>>4===0b1011) {    //immediate to register move
     let secondByte = buffer[i+1];
-    let instruction = 0b1111&(firstByte>>4);
-    let instructionOutput = `${instructions[instruction]}`;
+    let instructionOutput = `${instructions[0b1111&(firstByte>>4)]}`;
     let reg = 0b111&(firstByte);
     let wSet = 0b1&(firstByte>>3);
     let regOutput = wSet===0b1 ? `${regFieldw1[reg]}` : `${regFieldw0[reg]}`;
     let immediateOutput = '';
 
     if (wSet === 0b0) {   // if 8bit
-    immediateOutput = secondByte;
+      immediateOutput = secondByte;
       i = i + 2;
     } else if (wSet === 0b1) {    //if 16bit
       let thirdByte = buffer[i+2];
-      immediateOutput = (thirdByte<<8)|secondByte
+      immediateOutput = (thirdByte<<8)|secondByte;
       i = i + 3;
     }
 
