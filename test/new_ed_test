@@ -1,0 +1,14 @@
+address | command | parameter
+^
+$
+^$
+\.
+[<string>]
+[^<string>]
+v/[A-Z]/
+*
+|
+( )
+/ ... /
+g/.../
+g/.../s//.../

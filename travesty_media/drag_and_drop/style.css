@@ -1,0 +1,47 @@
+body {
+  background-color: salmon;
+  width: 1000px;
+  margin: auto;
+}
+
+header {
+  height: 100px;
+  margin: auto;
+  text-align: center;
+}
+
+main {
+  display: flex;
+  justify-content: space-around;
+}
+
+.empty {
+  background-color: white;
+  box-sizing: border-box;
+  height: 110px;
+  width: 110px;
+  border: solid black 2px;
+  display: flex;
+}
+
+.fill {
+  background-color: purple;
+  box-sizing: border-box;
+  height: 100px;
+  width: 100px;
+  margin: auto;
+  align-self: auto;
+}
+
+.hold {
+  border: dashed red 3px;
+}
+
+.hovered {
+  border: dashed purple 5px;
+}
+
+.invisible {
+  display: none;
+}
+
