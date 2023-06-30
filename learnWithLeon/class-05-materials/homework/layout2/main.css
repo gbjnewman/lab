@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+}
+
+header,
+footer {
+    height: 120px;
+    text-align: center;
+    border: 3px purple solid;
+}
+
+.topsection {
+    height: 150px;
+    width: 100%;
+    border: 3px solid lime;
+}
+
+.leftsect {
+    height: 200px;
+    border: gold 3px solid;
+    width: 40%;
+    float: left;
+}
+
+.rightsect {
+    height: 200px;
+    border: blue 3px solid;
+    width: 60%;
+    float: left;
+}
+
+ footer {
+    clear: left;
+ }
